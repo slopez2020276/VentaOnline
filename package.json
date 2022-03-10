@@ -1,0 +1,31 @@
+{
+  "dependencies": {
+    "bcrypt-nodejs": "^0.0.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "jwt-simple": "^0.5.6",
+    "moment": "^2.29.1",
+    "mongoose": "^6.2.5",
+    "nodemon": "^2.0.15"
+  },
+  "name": "venta",
+  "version": "1.0.0",
+  "description": "ventaoline",
+  "main": "index.js",
+  "devDependencies": {},
+
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slopez2020276/VentaOnline.git"
+  },
+  "author": "Sergio Lopez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/slopez2020276/VentaOnline/issues"
+  },
+  "homepage": "https://github.com/slopez2020276/VentaOnline#readme"
+}
