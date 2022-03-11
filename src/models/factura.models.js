@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const facturaSchema = new Schema ({
 
     nombre: String,
-    productos: [{ type: Schema.Types.ObjectId, ref: 'productos'}]
+    productos: [{ type: Schema.ObjectId, ref:  'productos'}]
 })
 
 module.exports = mongoose.model('facturas',facturaSchema);

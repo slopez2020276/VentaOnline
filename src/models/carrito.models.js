@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 const carritoSchema = new Schema ({
 
     compra: Boolean,
-    usario : {  type: Schema.Types.ObjectId, ref: 'usuarios'},
-    productos: [{ type: Schema.Types.ObjectId, ref: 'productos'}],
+    usario : {  type: Schema.ObjectId, ref:  'usuarios'},
+    productos: [{ type: Schema.ObjectId, ref:  'productos'}],
     stock :[Number]
 
 

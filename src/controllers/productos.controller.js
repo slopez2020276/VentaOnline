@@ -123,6 +123,60 @@ function eliminarProducto(req, res){
     })
 }
 
+function buscarProducto(req,res){
+    var parametros = req.body;
+
+    if(parametros.busqueda){
+        Productos.find({nombre: parametros.busqueda},(err, ProductosAgotados)=>{
+            if(err) return res.status(500).send({message: "Error al buscar coincidencias"});
+            if(ProductosAgotados){
+                return res.send({producto: ProductosAgotados});
+            }else{
+                return res.status(403).send({message: "No se encontraron coincidencias"});
+            }
+        })
+    }else if(parametros.busqueda == ""){
+        Productos.find({}).exec((err, productos)=>{
+            if(err) return res.status(500).send({message: "Error al buscar"});
+            if(productos){
+                return res.send({message: "Productos: ",productos});
+            }else{
+                return res.status(403).send({message: "No se encontraron productos"});
+            }
+        })
+    }else{
+        return res.status(403).send({message: "Ingrese el campo de búsqueda (search)"});
+    }
+}
+
+function obtenerProductos(req,res){
+    Productos.find({}).exec((err, productosEncontrados)=>{
+        if(err) return res.status(500).send({message: "Error al encontrar los productos"});
+         if(!productosEncontrados){
+            return res.status(500).send({message: "No se encontraron productos"});
+           
+        }else{
+            return res.send({message: "Productos: ", productosEncontrados});
+           
+        }
+    })
+}
+
+function ProductosAgotados(req,res){
+    Productos.find({stock: 0},(err, ProductosAgotados)=>{
+        if(err) return res.status(500).send({message: "Error al buscar productos agotados"});
+         if(ProductosAgotados){
+            if(ProductosAgotados != ""){
+                return res.send({message: "Productos agotados: ", ProductosAgotados});
+            }else{
+                return res.status(404).send({message: "Por el momento no hay productos agotados"});
+            }
+        }else{
+            return res.status(404).send({message: "Por el momento no hay productos agotados"});
+        }
+    })
+}
+
 
 
 
@@ -130,5 +184,8 @@ module.exports = {
 
     AgregarProducto,
     EditarProducto,
-    eliminarProducto
+    eliminarProducto,
+    buscarProducto,
+    obtenerProductos,
+    ProductosAgotados
 }
