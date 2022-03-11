@@ -3,7 +3,7 @@ const Carrito = require('../models/carrito.models');
 const bcrypt = require('bcrypt-nodejs');
 const jwt = require('../services/jwt');
 
-function Login (req, res){
+/*function Login (req, res){
 
 var parametros = req.body;
 
@@ -36,7 +36,38 @@ Usuario.findOne({username: parametros.username},(err, usuarioEncontrado)=>{
         return res.status(500).send({message:'error el correo no esta registrado'})
     }
 })
+}*/
+
+function Login(req, res) {
+    var parametros = req.body;
+    Usuario.findOne({ username: parametros.username }, (err, usuarioEncontrado) => {
+        if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
+        if (usuarioEncontrado) {
+            bcrypt.compare(parametros.password, usuarioEncontrado.password,
+                (err, verificacionPassword) => {
+                    if (verificacionPassword) {
+                        if (parametros.obtenerToken === 'true') {
+                            usuarioEncontrado.password = undefined;
+                            return res.status(200)
+                                .send({ usuario: usuarioEncontrado })
+                        } else {
+
+                            return res.status(200)
+                                .send({ token: jwt.crearToken(usuarioEncontrado) })
+                        }
+                    } else {
+                        return res.status(500)
+                            .send({ mensaje: 'Las contrasena no coincide' });
+                    }
+                })
+        } else {
+            return res.status(500)
+                .send({ mensaje: 'Error, el correo no se encuentra registrado.' })
+        }
+    })
 }
+
+
 
 function RegistrarAdminDefault(){
     var usuarioModel =  new Usuario();
@@ -44,8 +75,8 @@ function RegistrarAdminDefault(){
     usuarioModel.apellido = 'ADMIN';
     usuarioModel.email = 'ADMIN';
     usuarioModel.username = 'ADMIN';
-    usuarioModel.password = 'ADMIN';
-    usuarioModel.rol= '123456';
+    usuarioModel.password = '123456';
+    usuarioModel.rol= 'ADMIN';
 
     Usuario.find({username:'ADMIN'},(err,usuarioEncontrado)=>{
         if(usuarioEncontrado.length==0){
@@ -123,32 +154,50 @@ function agregarUsario(req,res){
 }
 
 
-function editaUsario(req, res){
 
+
+function editaUsario(req, res) {
+    var idUser = req.params.idUsario;
     var parametros = req.body;
 
-    var iduser= req.params.idUsario;
+    if (idUser !== req.user.sub ) return res.status(500)
+        .send({ mensaje: 'No puede editar otros usuarios' }),console.log(idUser+'   '+req.user.sub);
 
-    var usuarioenToken = req.user.sub;
+    Usuario.findByIdAndUpdate(req.user.sub, parametros, { new: true },
+        (err, usuarioActualizado) => {
+            if (err) return res.status(500)
+                .send({ mensaje: 'Error en la peticion' });
+            if (!usuarioActualizado) return res.status(500)
+                .send({ mensaje: 'Error al editar el Usuario' });
+            return res.status(200).send({ usuario: usuarioActualizado })
+        })
+}
 
+function eliminarUsuario (req, res){
+  var idUser = req.params.idUsario;
+  
 
-    Usuario.findOne({userId:iduser},(err,usuarioEncontrado)=>{
-        if(err) return res.status(500).send({message:'error en la peticion'});
-        if(usuarioEncontrado._id !== iduser){
+  Usuario.findOne({iduser: idUser},(err, usuarioEncontrado)=>{
 
-            return res.status(500).send({message:'no tiene permisos para editar este usuario'})
-        }else{
+    if(err) return res.status(500).send({message:'error en la peticion'});
+    if(idUser !== req.user.sub){
+        return res.status(500)
+        .send({message:'no pudede eliminar este usario'});
+  }else{
+    Usuario.findByIdAndDelete(req.user.sub,
+        (err, usuarioEliminado) => {
+            if (err) return res.status(500)
+                .send({ mensaje: 'Error en la peticion' });
+            if (!usuarioEliminado) return res.status(500)
+                .send({ mensaje: 'Error al eliminar el Usuario' });
+            return res.status(200).send({ usuario: usuarioEliminado })
+        })
+  }
 
-            Usuario.findByIdAndUpdate(iduser,parametros,{new:true}, (err,usuarioEditado)=>{
-                if(err)return res.status(500).send({message:'error en la peticion'});
-                if(!usuarioEditado) return res.status(500).send({message:'error al editar el usario'});
+    
+    
+  })
 
-                return res.status(200).send({usuario :usuarioEditado})
-
-            })
-        }
-
-    })
 
 
 
@@ -161,4 +210,5 @@ module.exports = {
    RegistrarAdminDefault,
    agregarUsario,
    editaUsario,
+   eliminarUsuario,
 }

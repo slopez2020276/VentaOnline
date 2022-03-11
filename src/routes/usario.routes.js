@@ -11,7 +11,8 @@ const api = express.Router();
 
 api.post('/login',controladorUsario.Login);
 api.post('/regristrarUsuario',controladorUsario.agregarUsario);
-api.put('/editarUsario',[md_autenticacion.Auth,md_roles.verCliente],controladorUsario.editaUsario)
+api.put('/editarUsuario/:idUsario',[md_autenticacion.Auth,md_roles.verCliente],controladorUsario.editaUsario);
+api.delete('/eliminarUsuario/:idUsario',[md_autenticacion.Auth,md_roles.verCliente],controladorUsario.eliminarUsuario);
 
 module.exports = api;
 
