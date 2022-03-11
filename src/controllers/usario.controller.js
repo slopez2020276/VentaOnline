@@ -71,3 +71,94 @@ function RegistrarAdminDefault(){
 
 
 }
+
+function agregarUsario(req,res){
+   var usuarioModel =  new Usuario();
+   var parametros = req.body;
+
+  //if(parametros.nombre && parametros.email && parametros.username){
+
+        usuarioModel.nombre = parametros.nombre;
+        usuarioModel.apellido = parametros.apellido;
+        usuarioModel.username = parametros.username;
+        usuarioModel.email = parametros.email;
+        usuarioModel.rol = 'ROL_CLIENTE';
+    
+
+    Usuario.find({username : parametros.username},(err,usuarioEncontrado)=>{
+        if(err) return res.status(500).send({message:'error en la peticion'})
+        if(usuarioEncontrado.length == 0){
+
+            bcrypt.hash(parametros.password,null,null,(err,passwordEncriptada)=>{
+
+                usuarioModel.password = passwordEncriptada;
+
+                usuarioModel.save((err,usuarioGuadado)=>{
+                    if(err) return res.status(500).send({message:'error en la peticion'});
+
+                    if(!usuarioEncontrado) return res.status(500).send({message:'error al agregar el Usuario'});
+
+                    return res.status(200).send({usuario: usuarioGuadado});
+
+
+                })
+
+            })
+        }else{
+            return res.status(500).send({message:'El nombre de usuario ya esta en uso '})
+        }
+
+
+    })
+
+
+ // }return res.status(500).send({message:'debe de llenar los parametos obligatorios'})
+      
+
+
+
+
+
+
+}
+
+
+function editaUsario(req, res){
+
+    var parametros = req.body;
+
+    var iduser= req.params.idUsario;
+
+    var usuarioenToken = req.user.sub;
+
+
+    Usuario.findOne({userId:iduser},(err,usuarioEncontrado)=>{
+        if(err) return res.status(500).send({message:'error en la peticion'});
+        if(usuarioEncontrado._id !== iduser){
+
+            return res.status(500).send({message:'no tiene permisos para editar este usuario'})
+        }else{
+
+            Usuario.findByIdAndUpdate(iduser,parametros,{new:true}, (err,usuarioEditado)=>{
+                if(err)return res.status(500).send({message:'error en la peticion'});
+                if(!usuarioEditado) return res.status(500).send({message:'error al editar el usario'});
+
+                return res.status(200).send({usuario :usuarioEditado})
+
+            })
+        }
+
+    })
+
+
+
+
+}
+
+
+module.exports = {
+   Login,
+   RegistrarAdminDefault,
+   agregarUsario,
+   editaUsario,
+}
