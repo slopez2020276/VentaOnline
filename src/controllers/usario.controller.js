@@ -3,40 +3,6 @@ const Carrito = require('../models/carrito.models');
 const bcrypt = require('bcrypt-nodejs');
 const jwt = require('../services/jwt');
 
-/*function Login (req, res){
-
-var parametros = req.body;
-
-Usuario.findOne({username: parametros.username},(err, usuarioEncontrado)=>{
-    if(err) return res.status(500).send({message:'error en la peticion'});
-    if(!usuarioEncontrado) return res.status(500).send({message:'error al obtener el usuario'});
-
-    if(usuarioEncontrado){
-        bcrypt.compare(parametros.password , usuarioEncontrado.password,(err, 
-            verificacionPassword)=>{
-
-                    if(verificacionPassword){
-
-                        if(parametros.obtenerToken === 'true'){
-                            return res.status(200).send({token : jwt.crearToken(usuarioEncontrado)})
-                        }else{
-                            usuarioEncontrado.password = undefined;
-                            return res.status(200).send({usario : usuarioEncontrado})
-                        }
-
-
-                    }else{
-                        return res.status(500).send({message:'las contraseñas no coinciden'});
-
-                    }
-
-            })
-
-    }else{
-        return res.status(500).send({message:'error el correo no esta registrado'})
-    }
-})
-}*/
 
 function Login(req, res) {
     var parametros = req.body;
@@ -93,7 +59,7 @@ function RegistrarAdminDefault(){
             })
 
         }else{
-            return console.log('ya esta registrado uwu');
+            return console.log('el admin ya esta registrado uwu');
         }
 
     })
