@@ -6,22 +6,21 @@ var Product = require("../models/producto.models");
 
 function agregarCarrito(req,res){
     var productId = req.params.productoId;
-    var params = req.body;
-    var userId = req.user.sub;
+    var parametros = req.body;
+    var usuario = req.user.sub;
 
-    if(params.stock){
+    if(parametros.stock){
         Product.findById(productId,(err,productFind)=>{
-            if(err){
-                return res.status(500).send({message: "Error al agregar un producto al carrito"});
-            }else if(productFind){
-                if(params.stock > productFind.stock){
-                    return res.status(403).send({message: "La cantidad a llevar es mayor a la cantidad del producto"});
+            if(err) return res.status(500).send({message: "Error al agregar al carrito"});
+                if(productFind){
+                if(parametros.stock > productFind.stock){
+                    return res.status(403).send({message: "La cantidad solucitada supera los productos en stock"});
                 }else{
-                    Cart.findOneAndUpdate({usario: userId},{$push:{productos:productFind._id,stock:params.stock}},{new:true},(err,cartUpdated)=>{
+                    Cart.findOneAndUpdate({usario: usuario},{$push:{productos:productFind._id,stock:parametros.stock}},{new:true},(err,carritoActualizado)=>{
                         if(err){
                             return res.status(500).send({message: "Error al agregar producto al carrito"});
-                        }else if(cartUpdated){
-                            return res.send({message: "Producto agregado al carrito exitosamente"});
+                        }else if(carritoActualizado){
+                            return res.send({message: "carrito agregado"});
                         }else{
                             return res.status(404).send({message: "No se agregó al carrito (No se encontró su carrito)"});
                         }

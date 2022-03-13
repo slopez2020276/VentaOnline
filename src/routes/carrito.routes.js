@@ -7,6 +7,6 @@ const md_roles = require('../middlewares/roles');
 const api = express.Router();
 
 
-api.put('/agregarCarrito/:usuarioId/:productoId',[md_autenticacion.Auth,md_roles.verCliente],controladorCarrito.agregarCarrito);
+api.put('/agregarCarrito/:productoId',[md_autenticacion.Auth,md_roles.verCliente],controladorCarrito.agregarCarrito);
 
 module.exports = api;

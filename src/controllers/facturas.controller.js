@@ -118,6 +118,41 @@ function agregarFactura(req,res){
 }
 
 
+function obtenerFacturas (req,res){
+   
+
+    Factura.find({}).exec((err,facturasEncontradas)=>{
+
+        if(err){
+            return res.status(500).send({message:'error en la peticion'})
+
+        }
+        if(!facturasEncontradas){
+            return res.status(500).send({message:'error al obtener las facturas'})
+        }
+        return res.status(500).send({facturas:facturasEncontradas})
+
+    })
+
+}
+
+function obternerFacturasUser(req,res){
+    var idUsuario = req.user.sub;
+
+    Usuario.findOne({_id:idUsuario}).populate("facturas").exec((err,factutasPopulate)=>{
+        if(err) return res.status(500).send({message:'error en la peticion'})
+        if(factutasPopulate){
+
+            var facturasfiltradas = factutasPopulate.facturas;
+            return res.status(200).send({factutas:facturasfiltradas});
+        }
+        return console.log('error al obtener las facturas')
+    })
+}
+
+
 module.exports = {
-    agregarFactura
+    agregarFactura,
+    obternerFacturasUser,
+    obtenerFacturas
 }
