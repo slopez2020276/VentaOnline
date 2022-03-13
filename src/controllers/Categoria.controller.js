@@ -7,14 +7,14 @@ const jwt = require('../services/jwt');
 
 function CategoriaDefaul(){
     var categoriamodel = new Categoria();
-    var busqueda = 'Default'
+    var nombre = 'Default'
     
 
-    Categoria.findOne({busqueda: busqueda},(err,categoriaEncontrada)=>{
+    Categoria.findOne({nombre: nombre},(err,categoriaEncontrada)=>{
 
             if(err) return res.status(500).send({message:'error en la peticion'})
             if(!categoriaEncontrada){
-                categoriamodel.busqueda ='Default';
+                categoriamodel.nombre ='Default';
                 categoriamodel.save((err,categoriaGuardad)=>{
                     if(err) return console.log('error en la peticion');
                     if(!categoriaGuardad) return console.log('error al crear la categoria por defecto')
@@ -35,11 +35,11 @@ function agregarCategoria (req,res){
     
    
 
-    Categoria.findOne({busqueda: parametros.busqueda},(err,CategoriaEncontrada)=>{
+    Categoria.findOne({nombre: parametros.nombre},(err,CategoriaEncontrada)=>{
         if(err) return res.status(500).send({message:'error en la peticion'});
         if(!CategoriaEncontrada){
 
-            categoriaModel.busqueda= parametros.busqueda;
+            categoriaModel.nombre= parametros.nombre;
             categoriaModel.save((err,categoriaGuardad)=>{
                 if(err)return res.status(500).send({message:'error en la peticion'});
                 if(!categoriaGuardad) return res.status(500).send({message:'error al guardar la caegoria '});
@@ -93,11 +93,11 @@ function eliminarCategoria(req,res){
                         }else if(categoriaEncontrada){
                             Categoria.findByIdAndRemove(idCategoria,(err, categoriaEliminada)=>{
                                 if(err){
-                                    return res.status(500).send({message: "error al eliinar la categoria"});
+                                    return res.status(500).send({message: "error al eliminar la categoria"});
                                 }else if(categoriaEliminada){
                                     return res.send({categoria: categoriaEliminada});
                                 }else{
-                                    return res.status(404).send({message: "error al eliinar la categoriar"});
+                                    return res.status(404).send({message: "error al eliminar la categoria"});
                                 }
                             })
                         }else{

@@ -30,9 +30,9 @@ function AgregarProducto (req, res){
                         modelProductos.save((err,productoGuardado)=>{
                         if(err) return res.status(500).send({message:'erro en la peticion'});
                         if(productoGuardado){
-                            Categoria.findByIdAndUpdate(categoriaId,{$push:{producto:productoGuardado._id }},{new: true},(err,categoriaActializada)=>{
+                            Categoria.findByIdAndUpdate(categoriaId,{$push:{productos:productoGuardado._id }},{new: true},(err,categoriaActializada)=>{
                               if(err) return res.status(500).send({message:'error al peticion'});
-                              if(!productoGuardado)return res.status(500).send({message:'error al agregar a la categoria'});
+                              if(!categoriaActializada)return res.status(500).send({message:'error al agregar a la categoria'});
 
                              
 

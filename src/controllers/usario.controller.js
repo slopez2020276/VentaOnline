@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt-nodejs');
 const jwt = require('../services/jwt');
 
 
+
+
 function Login(req, res) {
     var parametros = req.body;
     Usuario.findOne({ username: parametros.username }, (err, usuarioEncontrado) => {
@@ -51,8 +53,12 @@ function RegistrarAdminDefault(){
                 usuarioModel.save((err, usuarioGuardado)=>{
 
                     if(err) return console.log('error en la peticion')
-                    if(!usuarioEncontrado) return console.log('error al agregar el admin')
-                    return console.log('admin defaul'+' '+ usuarioEncontrado);
+                     if(usuarioGuardado){
+                        crearCarrito(usuarioGuardado);
+                        console.log('admin creado');
+                     }else{
+                         console.log('no se creo el admin ')
+                     }
                 });
 
 
@@ -93,9 +99,14 @@ function agregarUsario(req,res){
                 usuarioModel.save((err,usuarioGuadado)=>{
                     if(err) return res.status(500).send({message:'error en la peticion'});
 
-                    if(!usuarioEncontrado) return res.status(500).send({message:'error al agregar el Usuario'});
+                if(usuarioGuadado){
+                    crearCarrito(usuarioGuadado);
+                    console.log('carrito creado');
+                    return res.status(200) .send({usario:usuarioGuadado})
+                }else{
+                    console.log('no se creo el admind')
+                }
 
-                    return res.status(200).send({usuario: usuarioGuadado});
 
 
                 })
@@ -120,6 +131,25 @@ function agregarUsario(req,res){
 }
 
 
+function crearCarrito(user){
+    var carritoModel = new Carrito();
+
+    carritoModel.compra = false;
+    carritoModel.usario= user._id;
+    carritoModel.save((err,carritoGuardado)=>{
+        if(err) return console.log('error en la peticion')
+        if(!carritoGuardado){
+            return console.log('error al guardar el carrito')
+
+        }else{
+            console.log('carrito creado');
+        }
+
+
+    })
+
+
+}
 
 
 function editaUsario(req, res) {
