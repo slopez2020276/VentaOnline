@@ -63,7 +63,7 @@ function agregarFactura(req,res){
                                 if(!stockActizado){
                                     return res.status(500).send({message:'error al actualizar el stock'});
                                 }else{
-                                    return console.log('error al actualizar el stock')
+                                    return console.log(' stock actualizado')
                                 }
                             })
 
@@ -78,9 +78,10 @@ function agregarFactura(req,res){
                        facturaModel.productos = producto;
                        facturaModel.save((err,facturaGuardada)=>{
                            if(err) return res.status(500).send({message:'error en la peticion'});
-                           if(!facturaGuardada){
+                           if(facturaGuardada){
+                               console.log(facturaGuardada+'1111')
 
-                            Usuario.findByIdAndUpdate(usuariiId,{$push:{factura:facturaGuardada._id}},{new: true},(err,usuarioActualizado)=>{
+                            Usuario.findByIdAndUpdate(usuariiId,{$push:{facturas:facturaGuardada._id}},{new: true},(err,usuarioActualizado)=>{
                                 if(err) return res.status(500).send({message:'error en la peticion'})
                                 if(usuarioActualizado){
                                         Carrito.findOneAndRemove({usuario: usuariiId},(err,carritoEliminada)=>{
@@ -88,21 +89,23 @@ function agregarFactura(req,res){
                                             if(carritoEliminada){
                                                 var carritoModel = new Carrito();
                                                 carritoModel.usario = req.user.sub;
-                                                carrito.save((err,carritoGuardado)=>{
+                                                carritoModel.save((err,carritoGuardado)=>{
                                                     if(err) return res.status(500).send({message:'error en la peticion'});
                                                     if(carritoGuardado){
-
+                                                    
+                                                        return res.status(500).send({message:'carrito creado para una nueva compra'})
 
                                                     }
-                                                    return res.status(500).send({message:'error al guardar el carrito'})
+                                                    return console.log('error al guardar el carrito')
 
                                                 })
                                                 
-                                            }return res.status(500).send({message:'error al eliminar el carrito'})
+                                            }return console.log(' carrito eliminado');
                                         })
-                                }return res.status(500).send({message:'error el actializar el usuario'})
+                                }return console.log(' usuario ACTUALIZADO')
+                            
                             })
-                           }return res.status(500).send({message:'error al guardar la factura'})
+                           }return console.log('factura Guardada');
                        })
 
 
