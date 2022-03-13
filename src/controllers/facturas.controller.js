@@ -24,13 +24,15 @@ function agregarFactura(req,res){
                 producto.forEach(element=>{
                     Producto.findOne({_id:element},(err,ProductoEncontrado)=>{
                         if(err) return res.status(500).send({message:'error en la peticion'});
+                        var stokP = ProductoEncontrado.stock;
+                        console.log(ProductoEncontrado)
                         if(ProductoEncontrado){
 
-                            var stokP = ProductoEncontrado.stock;
+                            
 
                             if(stokP<catidad[i]){
                                 i++
-                                return res.status(500).send({message:'error '});
+                                return res.status(500).send({message:'error  '});
                                 
 
                             }else{
@@ -57,11 +59,11 @@ function agregarFactura(req,res){
                             let stockT = stockP - catidad[j];
                             j++
                             Producto.findByIdAndUpdate(element,{stock:stockT},{new: true},(err,stockActizado)=>{
-                                if(err) return res.status(500).send({message:'error en la peticion'})
+                                if(err) return res.status(500).send({message:'error en la peticion'});
                                 if(!stockActizado){
-                                    return res.status(500).send({message:'error al actualizar el stock'})
+                                    return res.status(500).send({message:'error al actualizar el stock'});
                                 }else{
-                                    return res.status(200).send({message:'el stock se actualizo'})
+                                    return console.log('error al actualizar el stock')
                                 }
                             })
 
@@ -76,7 +78,7 @@ function agregarFactura(req,res){
                        facturaModel.productos = producto;
                        facturaModel.save((err,facturaGuardada)=>{
                            if(err) return res.status(500).send({message:'error en la peticion'});
-                           if(facturaGuardada){
+                           if(!facturaGuardada){
 
                             Usuario.findByIdAndUpdate(usuariiId,{$push:{factura:facturaGuardada._id}},{new: true},(err,usuarioActualizado)=>{
                                 if(err) return res.status(500).send({message:'error en la peticion'})
