@@ -125,6 +125,7 @@ function eliminarProducto(req, res){
 
 function buscarProducto(req,res){
     var parametros = req.body;
+    var u = parametros.busqueda;
 
     if(parametros.busqueda){
         Productos.find({nombre: parametros.busqueda},(err, ProductosAgotados)=>{
@@ -145,7 +146,7 @@ function buscarProducto(req,res){
             }
         })
     }else{
-        return res.status(403).send({message: "Ingrese el campo de búsqueda (search)"});
+        return res.status(403).send({message: "Ingrese el campo de búsqueda"}),console.log(u);
     }
 }
 

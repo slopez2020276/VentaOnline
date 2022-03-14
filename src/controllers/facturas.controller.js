@@ -109,7 +109,7 @@ function agregarFactura(req,res){
                        })
 
 
-            }
+            }return console.log('a')
             
         }
 

@@ -1,0 +1,50 @@
+{
+	"info": {
+		"_postman_id": "cb7f02fe-2876-467b-8c17-c715df9e71cf",
+		"name": "Carrito",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Agregar Carrito",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "productoId",
+							"value": "622e69e7a4b2ef7e79e251f5",
+							"type": "default"
+						},
+						{
+							"key": "stock",
+							"value": "123",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/api/agregarCarrito/622e69e7a4b2ef7e79e251f5",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"agregarCarrito",
+						"622e69e7a4b2ef7e79e251f5"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

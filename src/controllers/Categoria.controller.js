@@ -57,11 +57,11 @@ function agregarCategoria (req,res){
 }
 
 function editarCategoria (req,res){
-    var categoria = req.parametros.idUsario;
+    var categoria = req.params.idCategoria;
     var parametros = req.body;
 
     
-            Categoria.findByIdAndUpdate(categoria,parametros,(err,categoriaGuardad)=>{
+            Categoria.findByIdAndUpdate(categoria,parametros,{ new: true},(err,categoriaGuardad)=>{
                 if(err) return res.status(500).send({message:'error en la peticion'});
                 if(!categoriaGuardad) return res.status(500).send({message:'error añ editar Categoria'});
                  return res.status(200).send({message:categoriaGuardad});
@@ -74,7 +74,7 @@ function editarCategoria (req,res){
  
  
 function eliminarCategoria(req,res){
-    const idCategoria = req.parametros.idCategoria;
+    const idCategoria = req.params.idCategoria;
     
 
     Categoria.findOne({_id : idCategoria}, (err, categoriaEncontrada)=>{
@@ -130,7 +130,7 @@ function buscarCategoria(req,res){
     var parametros = req.body;
 
     if(parametros.busqueda){
-        Categoria.find({busqueda: parametros.busqueda},(err,categorioEncontrada)=>{
+        Categoria.findOne({nombre: parametros.busqueda},(err,categorioEncontrada)=>{
             if(err)return res.status(500).send({message: "Error en la peticion"});
             if(categorioEncontrada){
                 if(!categorioEncontrada){
